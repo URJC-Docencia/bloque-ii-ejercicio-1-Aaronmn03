@@ -1,6 +1,7 @@
 import material.Position;
 
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -19,26 +20,85 @@ public class LinkedTree<E> implements NAryTree<E> {
      */
     private class TreeNode<T> implements Position<T> {
 
+        private T element;
+        private List<TreeNode<T>> children;
+        private TreeNode<E> parent;
+
+
+        public TreeNode(T element) {
+            this.element = element;
+        }
+
+        public TreeNode(T element, LinkedTree<E>.TreeNode<E> parent) {
+            this.element = element;
+            this.parent = parent;
+        }
+
+
+        public void setElement(T element) {
+            this.element = element;
+        }
+
+        public List<TreeNode<T>> getChildren() {
+            return children;
+        }
+
+        public void setChildren(List<TreeNode<T>> children) {
+            this.children = children;
+        }
+
+        public TreeNode<E> getParent() {
+            return parent;
+        }
+
+        public void setParent(TreeNode<E> parent) {
+            this.parent = parent;
+        }
+
         @Override
         public T getElement() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return element;
         }
 
     }
 
-    @Override
-    public Position<E> addRoot(E e) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    private TreeNode<E> root;
+
+    private int size;
+
+
 
     @Override
-    public Position<E> add(E element, Position<E> p) {
+    public Position<E> addRoot(E e) {
+        if (!isEmpty()){
+            throw new RuntimeException("The tree has already a root node");
+        }
+        root = new TreeNode<>(e);
+        size++;
+        return root;
+    }
+
+    private TreeNode<E> checkPosition(Position<E> p){
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    @Override
+    public Position<E> add(E element, Position<E> p) {
+        TreeNode<E> parent = checkPosition(p);
+        TreeNode<E> newNode = new TreeNode<>(element,parent);
+
+        parent.getChildren().add(newNode);
+        size++;
+        return newNode;
     }
 
     @Override
     public Position<E> add(E element, Position<E> p, int n) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> parent = checkPosition(p);
+        TreeNode<E> newNode = new TreeNode<>(element,parent);
+
+        parent.getChildren().add(newNode);
+        size++;
+        return newNode;
     }
 
     @Override
@@ -68,12 +128,12 @@ public class LinkedTree<E> implements NAryTree<E> {
 
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return size == 0;
     }
 
     @Override
     public Position<E> root() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return root;
     }
 
     @Override
@@ -107,6 +167,6 @@ public class LinkedTree<E> implements NAryTree<E> {
     }
 
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return size;
     }
 }
