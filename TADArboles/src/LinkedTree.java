@@ -1,5 +1,6 @@
 import material.Position;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,6 +13,9 @@ import java.util.List;
  */
 public class LinkedTree<E> implements NAryTree<E> {
 
+    private  TreeNode<E> root;
+
+    private int size;
     /**
      * This class represents a node in a tree data structure.
      * It implements the Position interface.
@@ -21,7 +25,7 @@ public class LinkedTree<E> implements NAryTree<E> {
     private class TreeNode<T> implements Position<T> {
 
         private T element;
-        private List<TreeNode<T>> children;
+        private List<TreeNode<T>> children = new ArrayList<>();
         private TreeNode<E> parent;
 
 
@@ -62,12 +66,6 @@ public class LinkedTree<E> implements NAryTree<E> {
 
     }
 
-    private TreeNode<E> root;
-
-    private int size;
-
-
-
     @Override
     public Position<E> addRoot(E e) {
         if (!isEmpty()){
@@ -79,7 +77,10 @@ public class LinkedTree<E> implements NAryTree<E> {
     }
 
     private TreeNode<E> checkPosition(Position<E> p){
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(!(p instanceof TreeNode)){
+            throw new RuntimeException("The position is invalid");
+        }
+        return (TreeNode<E>)p; 
     }
     @Override
     public Position<E> add(E element, Position<E> p) {
@@ -91,24 +92,46 @@ public class LinkedTree<E> implements NAryTree<E> {
         return newNode;
     }
 
+    /**
+     * Check if a given position is valid for the children list of a TreeNode.
+     *
+     * @param n      The position to check
+     * @param parent The parent TreeNode
+     * @throws RuntimeException If the position is invalid
+     */
+
+    private static <E> void checkPositionOfChildrenList(int n, LinkedTree<E>.TreeNode<E> parent) {
+        if(n<0 || n > parent.getChildren().size()){
+            throw new RuntimeException("The position is invalid");
+        }
+    }
     @Override
     public Position<E> add(E element, Position<E> p, int n) {
         TreeNode<E> parent = checkPosition(p);
-        TreeNode<E> newNode = new TreeNode<>(element,parent);
+        TreeNode<E> newNode = new TreeNode<>(element, parent);
 
-        parent.getChildren().add(newNode);
+        checkPositionOfChildrenList(n, parent);
+        parent.getChildren().add(n, newNode);
+
         size++;
         return newNode;
     }
 
     @Override
     public void swapElements(Position<E> p1, Position<E> p2) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> node1 = checkPosition(p1);
+        TreeNode<E> node2 = checkPosition(p2);
+        E aux = node1.getElement();
+        node1.setElement(node2.getElement());
+        node2.setElement(aux);
     }
 
     @Override
     public E replace(Position<E> p, E e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> node = checkPosition(p);
+        E aux = node.getElement();
+        node.setElement(e);
+        return aux;
     }
 
     @Override

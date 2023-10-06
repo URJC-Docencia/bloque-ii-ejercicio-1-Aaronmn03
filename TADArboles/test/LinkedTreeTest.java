@@ -1,3 +1,5 @@
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import material.Position;
 
@@ -25,6 +27,7 @@ public class LinkedTreeTest extends TestCase {
         tree.add("L", p3);
     }
 
+    @Test
     public void testSize() {
         Position<String> p = this.tree.addRoot("+");
         this.tree.add("2", p);
@@ -34,27 +37,32 @@ public class LinkedTreeTest extends TestCase {
         assertEquals(this.tree.size(), 5);
     }
 
+    @Test
     public void testSize2() {
         this.setTree();
         assertEquals(this.tree.size(), 12);
     }
 
+    @Test
     public void testRoot() {
         this.setTree();
         assertEquals(this.tree.root().getElement(), "A");
 
     }
 
+    @Test
     public void testIsEmpty() {
         assertTrue(this.tree.isEmpty());
     }
 
+    @Test
     public void testIsEmpty2() {
         Position<String> p = this.tree.addRoot("B");
         this.tree.add("C", p);
         assertFalse(this.tree.isEmpty());
     }
 
+    @Test
     public void testParent2() {
         Position<String> p = tree.addRoot("A");
         tree.add("B", p);
@@ -71,6 +79,7 @@ public class LinkedTreeTest extends TestCase {
         assertEquals(p2, tree.parent(p3));
     }
 
+    @Test
     public void testParent3() {
         this.setTree();
 
@@ -81,6 +90,7 @@ public class LinkedTreeTest extends TestCase {
         }
     }
 
+    @Test
     public void testPositions() {
         Position<String> p = this.tree.addRoot("+");
         this.tree.add("2", p);
@@ -92,6 +102,7 @@ public class LinkedTreeTest extends TestCase {
         assertEquals(salida.toString(), "+23");
     }
 
+    @Test
     public void testRemove() {
         Position<String> p = this.tree.addRoot("+");
         Position<String> q = this.tree.add("2", p);
@@ -103,6 +114,7 @@ public class LinkedTreeTest extends TestCase {
 
     }
 
+    @Test
     public void testAddN() {
         Position<String> p = this.tree.addRoot("R");
         this.tree.add("A", p);
@@ -116,13 +128,14 @@ public class LinkedTreeTest extends TestCase {
 
     }
 
-
+    @Test
     public void testRemove2() {
         this.setTree();
         this.tree.remove(this.tree.root());
         assertEquals(this.tree.size(), 0);
     }
 
+    @Test
     public void testRemove3() {
         Position<String> p = tree.addRoot("A");
         tree.add("B", p);
@@ -146,6 +159,7 @@ public class LinkedTreeTest extends TestCase {
         assertEquals(s.toString(), "ABCDE");
     }
 
+    @Test
     public void testGetUnmodifiableChildren() {
         Position<String> p = this.tree.addRoot("+");
         this.tree.add("2", p);
@@ -159,6 +173,7 @@ public class LinkedTreeTest extends TestCase {
         }
     }
 
+    @Test
     public void testGetChildren() {
         Position<String> p = this.tree.addRoot("+");
         this.tree.add("2", p);
@@ -171,6 +186,7 @@ public class LinkedTreeTest extends TestCase {
         assertEquals(salida.toString(), "23");
     }
 
+    @Test
     public void testGetChildren2() {
         Position<String> p = tree.addRoot("A");
         tree.add("B", p);
@@ -192,6 +208,7 @@ public class LinkedTreeTest extends TestCase {
         assertEquals(salida.toString(), "IJKL");
     }
 
+    @Test
     public void testIterator() {
         this.setTree();
 
@@ -202,12 +219,14 @@ public class LinkedTreeTest extends TestCase {
         assertEquals(s.toString(), "ABCDEFGHIJKL");
     }
 
+    @Test
     public void testIsRoot() {
         this.setTree();
         assertEquals(this.tree.root().getElement(), "A");
 
     }
 
+    @Test
     public void testIsRoot2() {
         try {
             this.tree.isRoot(null);
@@ -216,6 +235,7 @@ public class LinkedTreeTest extends TestCase {
         }
     }
 
+    @Test
     public void testSwapElements() {
         Position<String> p = tree.addRoot("A");
         tree.add("B", p);
@@ -241,6 +261,7 @@ public class LinkedTreeTest extends TestCase {
     }
 
 
+    @Test
     public void testReplace() {
         Position<String> p = tree.addRoot("A");
         tree.add("B", p);
