@@ -202,17 +202,20 @@ public class LinkedTree<E> implements NAryTree<E> {
 
     @Override
     public boolean isInternal(Position<E> v) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> node = checkPosition(v);
+        return !node.getChildren().isEmpty();
     }
 
     @Override
     public boolean isLeaf(Position<E> v) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> node = checkPosition(v);
+        return node.getChildren().isEmpty();
     }
 
     @Override
     public boolean isRoot(Position<E> v) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> node = checkPosition(v);
+        return node == root;
     }
 
     // 2 parte
