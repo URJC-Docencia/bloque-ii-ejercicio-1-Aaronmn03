@@ -157,14 +157,27 @@ public class LinkedTree<E> implements NAryTree<E> {
     }
     @Override
     public NAryTree<E> subTree(Position<E> v) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> vertex = checkPosition(v);
+        LinkedTree<E> tree = new LinkedTree<>();
+        tree.root = vertex;
+        tree.size = computeSize(vertex);
+        return tree;
     }
 
     @Override
     public void attach(Position<E> p, NAryTree<E> t) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> vertex = checkPosition(p);
+        LinkedTree<E> tree = checkTree(t);
+        vertex.getChildren().addAll(tree.root.getChildren());
+        size += tree.size;
     }
 
+    private LinkedTree<E> checkTree(NAryTree<E> t){
+        if(!(t instanceof LinkedTree)){
+            throw new RuntimeException("No es un LinkedTree");
+        }
+        return (LinkedTree<E>) t;
+    }
     @Override
     public boolean isEmpty() {
         return size == 0;
