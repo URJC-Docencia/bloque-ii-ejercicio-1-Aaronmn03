@@ -190,7 +190,8 @@ public class LinkedTree<E> implements NAryTree<E> {
 
     @Override
     public Position<E> parent(Position<E> v) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> node = checkPosition(v);
+        return node.getParent();
     }
 
     @Override
