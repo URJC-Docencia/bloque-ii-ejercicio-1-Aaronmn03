@@ -196,7 +196,8 @@ public class LinkedTree<E> implements NAryTree<E> {
 
     @Override
     public Iterable<? extends Position<E>> children(Position<E> v) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> node = checkPosition(v);
+        return node.getChildren();
     }
 
     @Override
