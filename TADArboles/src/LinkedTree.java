@@ -136,9 +136,25 @@ public class LinkedTree<E> implements NAryTree<E> {
 
     @Override
     public void remove(Position<E> p) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        TreeNode<E> node = checkPosition(p);
+        if (node == root){
+            node = null;
+            size = 0;
+        }else{
+            TreeNode<E> parent = node.getParent();
+            parent.getChildren().remove(node);
+            size -= computeSize(node);
+        }
+
     }
 
+    private int computeSize(TreeNode<E> node){ // metodo que dice el tamaño del subarbol.
+        int size = 1;
+        for (TreeNode<E> children : node.getChildren()){
+            size += computeSize(children);
+        }
+        return size;
+    }
     @Override
     public NAryTree<E> subTree(Position<E> v) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -184,10 +200,34 @@ public class LinkedTree<E> implements NAryTree<E> {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    // 2 parte
     @Override
     public Iterator<Position<E>> iterator() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+
+    public Iterator<Position<E>> iteratorPreOrder() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
+    public Iterator<Position<E>> iteratorPostOrder() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void breadthFirstTraversal(TreeNode<E> root, List<Position<E>> positions) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void postOrderTraversal(TreeNode<E> root, List<Position<E>> positions) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void preOrderTraversal(TreeNode<E> node, List<Position<E>> positions) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 
     public int size() {
         return size;
