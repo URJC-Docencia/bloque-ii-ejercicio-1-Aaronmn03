@@ -220,8 +220,13 @@ public class LinkedTree<E> implements NAryTree<E> {
 
     // 2 parte
     @Override
-    public Iterator<Position<E>> iterator() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Iterator<Position<E>> iterator() {   //breadthFirstTraversal
+        if(isEmpty()){
+            return new ArrayList<Position<E>>().iterator();
+        }
+        List<Position<E>> positions = new ArrayList<>();
+        breadthFirstTraversal(root, positions);
+        return positions.iterator();
     }
 
 
@@ -234,8 +239,16 @@ public class LinkedTree<E> implements NAryTree<E> {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private void breadthFirstTraversal(TreeNode<E> root, List<Position<E>> positions) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private void breadthFirstTraversal(TreeNode<E> node, List<Position<E>> positions) {     //Recorrido en anchura.
+        if(node != null){
+            List<TreeNode<E>> queue = new ArrayList<>();
+            queue.add(node);
+            while(!queue.isEmpty()){
+                TreeNode<E> nodeToVisit = queue.remove(0);
+                positions.add(nodeToVisit);
+                queue.addAll(nodeToVisit.getChildren());
+            }
+        }
     }
 
     private void postOrderTraversal(TreeNode<E> root, List<Position<E>> positions) {
