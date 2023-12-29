@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.plaf.basic.BasicTreeUI.TreeCancelEditingAction;
+
 
 /**
  * This class represents a tree data structure using a linked implementation.
@@ -13,9 +15,6 @@ import java.util.List;
  */
 public class LinkedTree<E> implements NAryTree<E> {
 
-    private  TreeNode<E> root;
-
-    private int size;
     /**
      * This class represents a node in a tree data structure.
      * It implements the Position interface.
@@ -23,40 +22,17 @@ public class LinkedTree<E> implements NAryTree<E> {
      * @param <T> the type of element stored in the node
      */
     private class TreeNode<T> implements Position<T> {
-
         private T element;
         private List<TreeNode<T>> children = new ArrayList<>();
-        private TreeNode<E> parent;
+        private TreeNode<T> parent;
 
-
-        public TreeNode(T element) {
-            this.element = element;
-        }
-
-        public TreeNode(T element, LinkedTree<E>.TreeNode<E> parent) {
+        public TreeNode(T element,TreeNode parent){
             this.element = element;
             this.parent = parent;
         }
 
-
-        public void setElement(T element) {
-            this.element = element;
-        }
-
-        public List<TreeNode<T>> getChildren() {
-            return children;
-        }
-
-        public void setChildren(List<TreeNode<T>> children) {
-            this.children = children;
-        }
-
-        public TreeNode<E> getParent() {
-            return parent;
-        }
-
-        public void setParent(TreeNode<E> parent) {
-            this.parent = parent;
+        public TreeNode(T element){
+            this(element,null);
         }
 
         @Override
@@ -64,120 +40,137 @@ public class LinkedTree<E> implements NAryTree<E> {
             return element;
         }
 
+        public TreeNode<T> getParent(){
+            return parent;
+        }
+
+        public List<TreeNode<T>> getChildren(){
+            return children;
+        }
+
+        public void setElement(T elem){
+            element = elem;
+        }
+
+        public void setParent(TreeNode<T> parent){
+            this.parent = parent;
+        }
+
+        public void setChildren(List<TreeNode<T>> children){
+            this.children = children;
+        }
+    }
+
+    private TreeNode<E> root;
+    private int size;
+    public LinkedTree(){
+        size = 0;
     }
 
     @Override
     public Position<E> addRoot(E e) {
-        if (!isEmpty()){
-            throw new RuntimeException("The tree has already a root node");
+        if(!isEmpty()){
+            throw new RuntimeException("El arbol no es vacio, ya tiene una raiz");
         }
-        root = new TreeNode<>(e);
-        size++;
+        root = new TreeNode<E>(e);
+        size ++;
         return root;
     }
 
-    private TreeNode<E> checkPosition(Position<E> p){
-        if(!(p instanceof TreeNode)){
-            throw new RuntimeException("The position is invalid");
+    public TreeNode<E> checkPosition(Position<E> p){
+        if(!(p instanceof TreeNode<E>)){
+            throw new RuntimeException("The Position is invalid");
         }
-        return (TreeNode<E>)p; 
+        return (TreeNode<E>) p;
     }
+
     @Override
     public Position<E> add(E element, Position<E> p) {
         TreeNode<E> parent = checkPosition(p);
-        TreeNode<E> newNode = new TreeNode<>(element,parent);
-
-        parent.getChildren().add(newNode);
+        TreeNode node = new TreeNode<>(element,parent);
+        parent.getChildren().add(node);
         size++;
-        return newNode;
+        return node;
     }
 
-    /**
-     * Check if a given position is valid for the children list of a TreeNode.
-     *
-     * @param n      The position to check
-     * @param parent The parent TreeNode
-     * @throws RuntimeException If the position is invalid
-     */
-
-    private static <E> void checkPositionOfChildrenList(int n, LinkedTree<E>.TreeNode<E> parent) {
-        if(n<0 || n > parent.getChildren().size()){
-            throw new RuntimeException("The position is invalid");
+    public void checkPositionOfChildrenList(int n,TreeNode<E> parent){
+        if(n < 0 || n > parent.getChildren().size()){
+            throw new RuntimeException("The position of the children is invalid");
         }
     }
+
     @Override
     public Position<E> add(E element, Position<E> p, int n) {
         TreeNode<E> parent = checkPosition(p);
-        TreeNode<E> newNode = new TreeNode<>(element, parent);
-
+        TreeNode node = new TreeNode<>(element, parent);
         checkPositionOfChildrenList(n, parent);
-        parent.getChildren().add(n, newNode);
-
+        parent.getChildren().add(n, node);
         size++;
-        return newNode;
+        return node;
     }
 
     @Override
     public void swapElements(Position<E> p1, Position<E> p2) {
         TreeNode<E> node1 = checkPosition(p1);
         TreeNode<E> node2 = checkPosition(p2);
-        E aux = node1.getElement();
+        E elementAux = node1.getElement();
         node1.setElement(node2.getElement());
-        node2.setElement(aux);
+        node2.setElement(elementAux);;
     }
 
     @Override
     public E replace(Position<E> p, E e) {
         TreeNode<E> node = checkPosition(p);
-        E aux = node.getElement();
+        E elementAux = node.getElement();
         node.setElement(e);
-        return aux;
+        return elementAux;
     }
 
     @Override
     public void remove(Position<E> p) {
         TreeNode<E> node = checkPosition(p);
-        if (node == root){
-            node = null;
+        if(node == root){
+            root = null;
             size = 0;
         }else{
-            TreeNode<E> parent = node.getParent();
-            parent.getChildren().remove(node);
+            node.getParent().getChildren().remove(node);
             size -= computeSize(node);
         }
-
     }
 
-    private int computeSize(TreeNode<E> node){ // metodo que dice el tamaño del subarbol.
-        int size = 1;
-        for (TreeNode<E> children : node.getChildren()){
-            size += computeSize(children);
+    private int computeSize(TreeNode<E> node){
+        size = 1;
+        for(TreeNode<E> child : node.getChildren()){
+            size += computeSize(child);
         }
         return size;
     }
+
     @Override
     public NAryTree<E> subTree(Position<E> v) {
-        TreeNode<E> vertex = checkPosition(v);
-        LinkedTree<E> tree = new LinkedTree<>();
-        tree.root = vertex;
-        tree.size = computeSize(vertex);
-        return tree;
+        TreeNode<E> node = checkPosition(v);
+        LinkedTree<E> subTree;
+        subTree = new LinkedTree<E>();
+        subTree.root = node;
+        subTree.size = computeSize(node);
+        return subTree;
+    }
+
+    private LinkedTree<E> checkTree(NAryTree<E> tree){
+        if(!(tree instanceof TreeNode)){
+            throw new RuntimeException("El arbol no es un arbol");
+        }
+        return (LinkedTree<E>) tree;
     }
 
     @Override
     public void attach(Position<E> p, NAryTree<E> t) {
-        TreeNode<E> vertex = checkPosition(p);
-        LinkedTree<E> tree = checkTree(t);
-        vertex.getChildren().addAll(tree.root.getChildren());
-        size += tree.size;
+        TreeNode<E> node = checkPosition(p);
+        LinkedTree<E> SubTree = checkTree(t);
+        node.getChildren().addAll(SubTree.root.getChildren());
+        size += SubTree.size;
     }
 
-    private LinkedTree<E> checkTree(NAryTree<E> t){
-        if(!(t instanceof LinkedTree)){
-            throw new RuntimeException("No es un LinkedTree");
-        }
-        return (LinkedTree<E>) t;
-    }
     @Override
     public boolean isEmpty() {
         return size == 0;
@@ -203,62 +196,82 @@ public class LinkedTree<E> implements NAryTree<E> {
     @Override
     public boolean isInternal(Position<E> v) {
         TreeNode<E> node = checkPosition(v);
-        return !node.getChildren().isEmpty();
+        return node.getChildren() != null;
     }
 
     @Override
     public boolean isLeaf(Position<E> v) {
         TreeNode<E> node = checkPosition(v);
-        return node.getChildren().isEmpty();
+        return node.getChildren() == null;
     }
 
     @Override
     public boolean isRoot(Position<E> v) {
         TreeNode<E> node = checkPosition(v);
-        return node == root;
+        return node.getParent() == null;
     }
 
-    // 2 parte
     @Override
-    public Iterator<Position<E>> iterator() {   //breadthFirstTraversal
+    public Iterator<Position<E>> iterator() {
         if(isEmpty()){
             return new ArrayList<Position<E>>().iterator();
         }
         List<Position<E>> positions = new ArrayList<>();
-        breadthFirstTraversal(root, positions);
+        breadthFirstTraversal(root,positions);
         return positions.iterator();
     }
 
-
-    public Iterator<Position<E>> iteratorPreOrder() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-
-    public Iterator<Position<E>> iteratorPostOrder() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    private void breadthFirstTraversal(TreeNode<E> node, List<Position<E>> positions) {     //Recorrido en anchura.
+    private void breadthFirstTraversal(TreeNode<E> node, List<Position<E>> lista){
         if(node != null){
             List<TreeNode<E>> queue = new ArrayList<>();
             queue.add(node);
             while(!queue.isEmpty()){
                 TreeNode<E> nodeToVisit = queue.remove(0);
-                positions.add(nodeToVisit);
+                lista.add(nodeToVisit);
                 queue.addAll(nodeToVisit.getChildren());
             }
         }
     }
 
-    private void postOrderTraversal(TreeNode<E> root, List<Position<E>> positions) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    public Iterator<Position<E>> iteratorPreOrden() {
+        if(isEmpty()){
+            return new ArrayList<Position<E>>().iterator();
+        }
+        List<Position<E>> list = new ArrayList<>();
+        preOrdenTraversal(root, list);
+        return list.iterator();
+
     }
 
-    private void preOrderTraversal(TreeNode<E> node, List<Position<E>> positions) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private void preOrdenTraversal(TreeNode<E> node, List<Position<E>> list){
+        if(node != null){
+            list.add(node);
+            for(TreeNode<E> child: node.getChildren()){
+                preOrdenTraversal(child, list);
+            } 
+        }
     }
 
+
+    public Iterator<Position<E>> iteratorPostOrden() {
+        if(isEmpty()){
+            return new ArrayList<Position<E>>().iterator();
+        }
+        List<Position<E>> list = new ArrayList<>();
+        postOrdenTraversal(root, list);
+        return list.iterator();
+        
+    }
+
+    private void postOrdenTraversal(TreeNode<E> node, List<Position<E>> list){
+        if(node != null){
+            for(TreeNode<E> child : node.getChildren()){
+                postOrdenTraversal(child, list);
+            }
+            list.add(node);
+        }
+    }
 
     public int size() {
         return size;

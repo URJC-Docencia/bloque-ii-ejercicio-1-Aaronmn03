@@ -3,6 +3,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import javax.swing.tree.TreeNode;
+
 
 /**
  * This class is a test class for the LCRSTree class.
@@ -134,7 +136,7 @@ public class LCRSTreeTest {
         this.tree.add(400, h);
         this.tree.add(500, h);
         this.tree.remove(h);
-        assertEquals(this.tree.size(), 2);
+        assertEquals(this.tree.size(), 4);
 
     }
 
@@ -308,5 +310,61 @@ public class LCRSTreeTest {
             salida.append(e.getElement());
         }
         assertEquals(salida.toString(), "-12-245-37-49101112");
+    }
+
+    @Test
+    public void testReplacePreOrden() { //acuerdate de cambiar el metodo del iterator
+        Position<Integer> p = tree.addRoot(1);
+        tree.add(2, p);
+        Position<Integer> p1 = tree.add(3, p);
+        tree.add(4, p);
+        tree.add(5, p1);
+        Position<Integer> p2 = tree.add(6, p1);
+        tree.add(7, p2);
+        Position<Integer> p3 = tree.add(8, p2);
+        tree.add(9, p3);
+        tree.add(10, p3);
+        tree.add(11, p3);
+        tree.add(12, p3);
+
+
+        this.tree.replace(p, -1);
+        this.tree.replace(p1, -2);
+        this.tree.replace(p2, -3);
+        this.tree.replace(p3, -4);
+
+        StringBuilder salida = new StringBuilder();
+        for (Position<Integer> e : this.tree) {
+            salida.append(e.getElement());
+        }
+        assertEquals(salida.toString(), "-12-25-37-491011124");
+    }
+
+    @Test
+    public void testReplacePostOrden() {    //acuerdate de cambiar el metodo del iterator
+        Position<Integer> p = tree.addRoot(1);
+        tree.add(2, p);
+        Position<Integer> p1 = tree.add(3, p);
+        tree.add(4, p);
+        tree.add(5, p1);
+        Position<Integer> p2 = tree.add(6, p1);
+        tree.add(7, p2);
+        Position<Integer> p3 = tree.add(8, p2);
+        tree.add(9, p3);
+        tree.add(10, p3);
+        tree.add(11, p3);
+        tree.add(12, p3);
+
+
+        this.tree.replace(p, -1);
+        this.tree.replace(p1, -2);
+        this.tree.replace(p2, -3);
+        this.tree.replace(p3, -4);
+
+        StringBuilder salida = new StringBuilder();
+        for (Position<Integer> e : this.tree) {
+            salida.append(e.getElement());
+        }
+        assertEquals(salida.toString(), "2579101112-4-3-24-1");
     }
 }
